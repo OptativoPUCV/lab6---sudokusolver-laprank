@@ -95,14 +95,12 @@ List* get_adj_nodes(Node* n){
         return list;
     }
     for (int num = 1; num <= 9; num++){
-        Node* adj_node = copy(n);
-        adj_node->sudo[row][col] = num;
-        if (is_valid(adj_node)){
-            pushBack(list, adj_node);
-        } else {
-            free(adj_node);
-        }
-    }
+         if (is_valid(n)){
+             Node* adj_node = copy(n);
+             adj_node->sudo[row][col] = num;
+             pushBack(list, adj_node);
+         }
+     }
 
    
     return list;
