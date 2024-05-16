@@ -43,14 +43,64 @@ void print_node(Node* n){
     printf("\n");
 }
 
-int is_valid(Node* n){
-   
+int is_valid(Node* n){\
+   for (int i = 0; i < 9; i++) {
+        int row_check[10] = {0};
+        int col_check[10] = {0};
+        for (int j = 0; j < 9; j++) {
+            // Verificar filas
+            if (n->sudo[i][j] != 0 && row_check[n->sudo[i][j]] == 1)
+                return 0;
+            row_check[n->sudo[i][j]] = 1;
+            // Verificar columnas
+            if (n->sudo[j][i] != 0 && col_check[n->sudo[j][i]] == 1)
+                return 0;
+            col_check[n->sudo[j][i]] = 1;
+        }
+    }
+
+    // Verificar subcuadros 3x3
+    for (int block_row = 0; block_row < 9; block_row += 3) {
+        for (int block_col = 0; block_col < 9; block_col += 3) {
+            int block_check[10] = {0};
+            for (int i = block_row; i < block_row + 3; i++) {
+                for (int j = block_col; j < block_col + 3; j++) {
+                    if (n->sudo[i][j] != 0 && block_check[n->sudo[i][j]] == 1)
+                        return 0;
+                    block_check[n->sudo[i][j]] = 1;
+                }
+            }
+        }
+    }
+
     return 1;
 }
 
 
 List* get_adj_nodes(Node* n){
     List* list=createList();
+   int row = -1, col = -1;
+   for (int i = 0; i < 9; i++) {
+        for (int j = 0; j < 9; j++) {
+            if (n->sudo[i][j] == 0) {
+                row = i;
+                col = j;
+                break;
+            }
+        }
+        if (row != -1 && col != -1)
+            break;
+    }
+    if (row == -1 && col == -1) {
+        return list;
+    }
+    for (int num = 1; num <= 9; num++){
+        if (is_valid(n)){
+            Node* adj_node = copy(n);
+            adj_node->sudo[row][col] = num;
+            pushBack(list, adj_node);
+        }
+    }
    
     return list;
 }
